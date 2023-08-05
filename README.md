@@ -68,3 +68,9 @@ ERROR   cmd/ipfs        ipfs/daemon.go:567      failed to bootstrap (no peers fo
 ```
 
 Want to reset IPFS state? The IPFS data volume is persisted in `./local-data` you may also opt to destroy the Docker container
+
+## Known issues
+
+How to solve "JSX element implicitly has type 'any' " error?
+
+(Windows: ctrl + shift + p) or (Mac: cmd + shift + p) then search Typescript:Restart TS server hit enter and done.

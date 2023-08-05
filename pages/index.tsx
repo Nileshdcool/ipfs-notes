@@ -1,7 +1,6 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "@next/font/google";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { BasicIpfsData } from "./api/ipfs";
 import "bootstrap/dist/css/bootstrap.css";
@@ -21,34 +20,34 @@ export default function Home() {
   const [result, setResult] = useState<BasicIpfsData | null>(null);
 
   const [note, setNote] = useState<any>([]);
-  
+
   const [txt, setTxt] = useState("");
 
   const handleLoad = async () => {
     setrequestLoad(true);
     setLoading(true);
     const { data } = await axios.get("/api/ipfs");
-    setResult(data);
+    // setResult(data);
     setLoading(false);
   };
 
   const saveNotes = async () => {
     setLoading(true);
-    const { data } = await axios.post("/api/ipfs",{txt});
+    const { data } = await axios.post("/api/ipfs", { txt });
     setTxt('');
     console.log(data);
-    setNote([...note,{cid:data.cid,content:data.content}]);
+    setNote([...note, { cid: data.cid, content: data.content }]);
     setLoading(false);
   };
 
-  const handlleChange = (e:any) => {
+  const handlleChange = (e: any) => {
     setTxt(e.target.value);
   }
   // avoiding ternary operators for classes
   function classNames(...classes: any) {
     return classes.filter(Boolean).join(" ");
   }
-  
+
   return (
     <>
       <Head>
@@ -58,67 +57,74 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
-                <Row
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontSize: "3rem",
-                        fontWeight: "bolder",
-                    }}
+        <Row
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "3rem",
+            fontWeight: "bolder",
+          }}
+        >
+          IPFS Notes
+        </Row>
+        <hr />
+        <Row>
+          <Col md={{ span: 5, offset: 4 }}>
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder="add note . . . "
+                size="lg"
+                onChange={handlleChange}
+                value={txt}
+                aria-label="add something"
+                aria-describedby="basic-addon2"
+              />
+              <InputGroup>
+                <Button
+                  variant="dark"
+                  className="mt-2"
+                  onClick={saveNotes}
                 >
-                    IPFS Notes
-                </Row>
-  
-                <hr />
-                <Row>
-                    <Col md={{ span: 5, offset: 4 }}>
-                        <InputGroup className="mb-3">
-                            <FormControl
-                                placeholder="add note . . . "
-                                size="lg"
-                                onChange={handlleChange}
-                                value={txt}
-                                aria-label="add something"
-                                aria-describedby="basic-addon2"
-                            />
-                            <InputGroup>
-                                <Button
-                                    variant="dark"
-                                    className="mt-2"
-                                    onClick={saveNotes}
-                                >
-                                    ADD
-                                </Button>
-                            </InputGroup>
-                        </InputGroup>
-                    </Col>
-                </Row>
-                {requestLoad && <Row>
-                    <Col md={{ span: 5, offset: 4 }}>
-                        <ListGroup>
-                            {/* map over and print items */}
-                            {note.map((item:any, index:any) => {
-                                return (
-                                  <div key = {index} > 
-                                    <ListGroup.Item
-                                        variant="dark"
-                                        action
-                                        style={{display:"flex",
-                                                justifyContent:'space-between'
-                                      }}
-                                    >
-                                        cid: {item.cid} content: {item.content}
-                                        <span>
-                                        </span>
-                                    </ListGroup.Item>
-                                  </div>
-                                );
-                            })}
-                        </ListGroup>
-                    </Col>
-                </Row>}
-            </Container>
+                  ADD
+                </Button>
+                <Button
+                  variant="dark"
+                  className="mt-2"
+                  onClick={handleLoad}
+                >
+                  {loading ? "Loading..." : "Retrieve Data"}
+                </Button>
+              </InputGroup>
+            </InputGroup>
+          </Col>
+        </Row>
+        {requestLoad && <Row>
+          <Col md={{ span: 5, offset: 4 }}>
+            <ListGroup>
+              {/* map over and print items */}
+              {note.map((item: any, index: any) => {
+                return (
+                  <div key={index} >
+                    <ListGroup.Item
+                      variant="dark"
+                      action
+                      style={{
+                        display: "flex",
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      cid: {item.cid} content: {item.content}
+                      <span>
+                      </span>
+                    </ListGroup.Item>
+                  </div>
+                );
+              })}
+            </ListGroup>
+          </Col>
+        </Row>}
+      </Container>
     </>
   );
 }
