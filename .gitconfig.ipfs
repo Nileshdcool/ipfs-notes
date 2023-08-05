@@ -1,0 +1,11 @@
+# ~/personal/.gitconfig.pers
+ 
+[user]
+email = neil.sukalikar@gmail.com
+name = Nilesh Sukalikar
+ 
+[github]
+user = "Nileshdcool"
+
+[core]
+sshCommand = "ssh -i ~/.ssh/ipfs"
