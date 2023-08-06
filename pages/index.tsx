@@ -35,8 +35,16 @@ export default function Home() {
 
   const saveNotes = async () => {
     try {
+      debugger;
       setLoading(true);
       const { data } = await axios.post("/api/ipfs", { txt });
+
+      console.log(data);
+
+      if (!data) {
+        toast.error('This notes is already present');
+        return;
+      }
       setTxt('');
       console.log(data);
       setLoading(false);
