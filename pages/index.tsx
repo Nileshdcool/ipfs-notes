@@ -1,8 +1,6 @@
 import Head from "next/head";
-import { Inter } from "@next/font/google";
 import { useState } from "react";
 import axios from "axios";
-import { BasicIpfsData } from "./api/ipfs";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -11,43 +9,47 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import ListGroup from "react-bootstrap/ListGroup";
-const inter = Inter({ subsets: ["latin"] });
+import toast, { Toaster } from 'react-hot-toast';
 
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [requestLoad, setrequestLoad] = useState(false);
-  const [result, setResult] = useState<BasicIpfsData | null>(null);
-
   const [note, setNote] = useState<any>([]);
 
   const [txt, setTxt] = useState("");
 
   const handleLoad = async () => {
-    setrequestLoad(true);
-    setLoading(true);
-    const { data } = await axios.get("/api/ipfs");
-    setNote(data);
-    setLoading(false);
+    try {
+      setrequestLoad(true);
+      setLoading(true);
+      const { data } = await axios.get("/api/ipfs");
+      setNote(data);
+      setLoading(false);
+      toast.success('Data loaded successfully!');
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong');
+    }
   };
 
   const saveNotes = async () => {
-    setLoading(true);
-    const { data } = await axios.post("/api/ipfs", { txt });
-    setTxt('');
-    console.log(data);
-    // setNote([...note, { cid: data.cid, content: data.content }]);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data } = await axios.post("/api/ipfs", { txt });
+      setTxt('');
+      console.log(data);
+      setLoading(false);
+      toast.success('Notes Saved Successfully!');
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong');
+    }
   };
 
   const handlleChange = (e: any) => {
     setTxt(e.target.value);
   }
-  // avoiding ternary operators for classes
-  function classNames(...classes: any) {
-    return classes.filter(Boolean).join(" ");
-  }
-
   return (
     <>
       <Head>
@@ -57,6 +59,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
         <Row
           style={{
             display: "flex",
@@ -88,13 +94,6 @@ export default function Home() {
                 >
                   ADD
                 </Button>
-                <Button
-                  variant="dark"
-                  className="mt-2"
-                  onClick={handleLoad}
-                >
-                  {loading ? "Loading..." : "Retrieve Data"}
-                </Button>
               </InputGroup>
             </InputGroup>
           </Col>
@@ -116,14 +115,30 @@ export default function Home() {
                     >
                       cid: {item.cid} content: {item.content}
                       <span>
+                        <Button style={{ marginRight: "10px" }}
+                          variant="dark"
+                        >
+                          Verify
+                        </Button>
+
                       </span>
                     </ListGroup.Item>
                   </div>
                 );
               })}
             </ListGroup>
+            <InputGroup>
+              <Button
+                variant="dark"
+                className="mt-2"
+                onClick={handleLoad}
+              >
+                {loading ? "Loading..." : "Load More"}
+              </Button>
+            </InputGroup>
           </Col>
         </Row>}
+
       </Container>
     </>
   );
