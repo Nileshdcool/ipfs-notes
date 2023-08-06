@@ -27,7 +27,7 @@ export default function Home() {
     setrequestLoad(true);
     setLoading(true);
     const { data } = await axios.get("/api/ipfs");
-    // setResult(data);
+    setNote(data);
     setLoading(false);
   };
 
@@ -36,7 +36,7 @@ export default function Home() {
     const { data } = await axios.post("/api/ipfs", { txt });
     setTxt('');
     console.log(data);
-    setNote([...note, { cid: data.cid, content: data.content }]);
+    // setNote([...note, { cid: data.cid, content: data.content }]);
     setLoading(false);
   };
 
