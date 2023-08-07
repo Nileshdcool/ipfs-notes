@@ -10,13 +10,13 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import ListGroup from "react-bootstrap/ListGroup";
 import toast, { Toaster } from 'react-hot-toast';
+import { ModalBody, ModalDialog, ModalFooter, ModalHeader, ModalTitle } from "react-bootstrap";
 
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [requestLoad, setrequestLoad] = useState(false);
   const [note, setNote] = useState<any>([]);
-
   const [txt, setTxt] = useState("");
 
   const handleLoad = async () => {
@@ -32,7 +32,6 @@ export default function Home() {
       toast.error('Something went wrong');
     }
   };
-
   const saveNotes = async () => {
     try {
       debugger;
@@ -71,6 +70,11 @@ export default function Home() {
           position="top-right"
           reverseOrder={false}
         />
+        <div
+          className="modal show"
+          style={{ display: 'block', position: 'initial' }}
+        > 
+        </div>
         <Row
           style={{
             display: "flex",
@@ -84,9 +88,10 @@ export default function Home() {
         </Row>
         <hr />
         <Row>
-          <Col md={{ span: 5, offset: 4 }}>
+          <Col md={{ span: 6, offset: 4 }}>
             <InputGroup className="mb-3">
               <FormControl
+                style={{ marginBottom: '10px' }}
                 placeholder="add note . . . "
                 size="lg"
                 onChange={handlleChange}
@@ -94,6 +99,14 @@ export default function Home() {
                 aria-label="add something"
                 aria-describedby="basic-addon2"
               />
+
+              <Button
+                variant="dark"
+                className=""
+                onClick={handleLoad}
+              >
+                Refresh
+              </Button>
               <InputGroup>
                 <Button
                   variant="dark"
@@ -107,7 +120,7 @@ export default function Home() {
           </Col>
         </Row>
         {requestLoad && <Row>
-          <Col md={{ span: 5, offset: 4 }}>
+          <Col md={{ span: 6, offset: 4 }}>
             <ListGroup>
               {/* map over and print items */}
               {note.map((item: any, index: any) => {
@@ -122,14 +135,7 @@ export default function Home() {
                       }}
                     >
                       cid: {item.cid} content: {item.content}
-                      <span>
-                        <Button style={{ marginRight: "10px" }}
-                          variant="dark"
-                        >
-                          Verify
-                        </Button>
 
-                      </span>
                     </ListGroup.Item>
                   </div>
                 );
